@@ -1,0 +1,1 @@
+from autgolem.differential.discrete import diff
