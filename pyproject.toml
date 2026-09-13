@@ -7,7 +7,9 @@ authors = [
     { name = "AutGolemgh", email = "philipp.bitschnau123@gmail.com" }
 ]
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "torch>=2.14.0",
+]
 
 [tool.maturin]
 module-name = "autgolem._core"
