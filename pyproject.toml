@@ -1,6 +1,6 @@
 [project]
 name = "autgolem"
-version = "0.3.0"
+version = "0.4.0"
 description = "Add your description here"
 readme = "README.md"
 authors = [
@@ -8,7 +8,9 @@ authors = [
 ]
 requires-python = ">=3.12"
 dependencies = [
-    "torch>=2.14.0",
+    "matplotlib>=3.7",
+    "numpy>=1.24",
+    "torch>=2.0",
 ]
 
 [tool.maturin]
