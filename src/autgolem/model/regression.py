@@ -93,3 +93,42 @@ class LinearRegression:
             a.grid()
         plt.tight_layout()
         plt.show()
+
+class CauchyRegression:
+    """Multiple linear regression trained with the Cauchy loss using PyTorch."""
+
+    def __init__(self, c=1.0, lr=1.0, epochs=3000):
+        self.c = c
+        self.lr = lr
+        self.epochs = epochs
+        self.loss_history = []
+
+    def loss(self, y_hat, y):
+        return torch.mean(self.c**2 / 2 * torch.log(1 + ((y - y_hat) / self.c) ** 2))
+
+    def fit(self, X, y):
+        X = torch.tensor(X, dtype=torch.float32)
+        y = torch.tensor(y, dtype=torch.float32)
+
+        # standardize features
+        self.mean, self.std = X.mean(0), X.std(0)
+        X = (X - self.mean) / self.std
+
+        # weights w1..w4 = 0, bias w0 starts at median of y
+        self.w = torch.zeros(X.shape[1], requires_grad=True)
+        self.w0 = torch.tensor(y.median().item(), requires_grad=True)
+
+        for epoch in range(self.epochs):
+            loss = self.loss(X @ self.w + self.w0, y)
+            loss.backward()
+            with torch.no_grad():
+                self.w -= self.lr * self.w.grad
+                self.w0 -= self.lr * self.w0.grad
+                self.w.grad.zero_()
+                self.w0.grad.zero_()
+            self.loss_history.append(loss.item())
+        return self
+
+    def predict(self, X):
+        X = (torch.tensor(X, dtype=torch.float32) - self.mean) / self.std
+        return (X @ self.w + self.w0).detach().numpy()
